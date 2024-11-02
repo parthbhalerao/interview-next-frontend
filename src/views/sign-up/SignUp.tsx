@@ -14,8 +14,10 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { ThemeProvider } from '@/theme/exports';
-import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
-import ColorModeSelect from '../../theme/components/ColorModeSelect';
+import { GoogleIcon, FacebookIcon, SitemarkIcon, LinkedInIcon } from '@/theme/components/icons/CustomIcons';
+import ColorModeSelect from '@/theme/components/ColorModeSelect';
+import IconButton from '@mui/material/IconButton';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -121,7 +123,22 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   return (
     <ThemeProvider {...props}>
       <CssBaseline enableColorScheme />
-      <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
+      {/* <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} /> */}
+      <Box sx={{ position: 'fixed', top: '1rem', left: '1rem' }}>
+        <Link href="/" sx={{ textDecoration: 'none', color: 'inherit' }}>
+          <Button
+            startIcon={<ArrowBackIcon />}
+            sx={{ 
+              color: 'text.primary',
+              '&:hover': {
+                backgroundColor: 'action.hover',
+              }
+            }}
+          >
+            Back
+          </Button>
+        </Link>
+      </Box>
       <SignUpContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
           <SitemarkIcon />
@@ -198,7 +215,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               Already have an account?{' '}
               <span>
                 <Link
-                  href="/material-ui/getting-started/templates/sign-in/"
+                  href="/auth/login"
                   variant="body2"
                   sx={{ alignSelf: 'center' }}
                 >
@@ -222,10 +239,10 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             <Button
               fullWidth
               variant="outlined"
-              onClick={() => alert('Sign up with Facebook')}
-              startIcon={<FacebookIcon />}
+              onClick={() => alert('Sign up with LinkedIn')}
+              startIcon={<LinkedInIcon />}
             >
-              Sign up with Facebook
+              Sign up with LinkedIn
             </Button>
           </Box>
         </Card>

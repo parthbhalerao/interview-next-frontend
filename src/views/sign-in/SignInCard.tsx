@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
 import ForgotPassword from './ForgotPassword';
-import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
+import { GoogleIcon, FacebookIcon, SitemarkIcon, LinkedInIcon } from '@/theme/components/icons/CustomIcons';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -175,7 +175,7 @@ export default function SignInCard() {
           Don&apos;t have an account?{' '}
           <span>
             <Link
-              href="/material-ui/getting-started/templates/sign-in/"
+              href="/auth/signup"
               variant="body2"
               sx={{ alignSelf: 'center' }}
             >
@@ -202,10 +202,10 @@ export default function SignInCard() {
         <Button
           fullWidth
           variant="outlined"
-          onClick={() => alert('Sign in with Facebook')}
-          startIcon={<FacebookIcon />}
+          onClick={() => alert('Sign in with LinkedIn')}
+          startIcon={<LinkedInIcon />}
         >
-          Sign in with Facebook
+          Sign in with LinkedIn
         </Button>
       </Box>
     </Card>

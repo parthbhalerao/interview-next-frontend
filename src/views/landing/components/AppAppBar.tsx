@@ -12,8 +12,8 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Link from '@mui/material/Link';
-import Sitemark from './SitemarkIcon';
-import ColorModeIconDropdown from '../../../theme/components/ColorModeIconDropdown';
+import { SitemarkIcon } from '@/theme/components/icons/CustomIcons';
+import ColorModeIconDropdown from '@/theme/components/ColorModeIconDropdown';
 import NextLink from 'next/link';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
@@ -53,7 +53,7 @@ export default function AppAppBar() {
       <Container maxWidth="lg">
         <StyledToolbar variant="dense" disableGutters>
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
-            <Sitemark />
+            <SitemarkIcon />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               <Button variant="text" color="info" size="small">
                 Features

@@ -1,20 +1,12 @@
 // frontend/src/contexts/AuthContext.tsx
-import { createContext, useContext, useState, useEffect } from 'react';
-import { authService } from '@/services/auth';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { api } from '@/services/api';
 import { useRouter } from 'next/navigation';
-
-interface User {
-  id: number;
-  username: string;
-  email: string;
-  is_active: boolean;
-  first_name?: string;
-  last_name?: string;
-}
+import axios from 'axios';
 
 interface AuthContextType {
+  user: any | null;
   isAuthenticated: boolean;
-  user: User | null;
   login: (username: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -23,54 +15,63 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<any | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    try {
-      const userData = await authService.getProfile();
-      setUser(userData);
+    const token = localStorage.getItem('token');
+    if (token) {
       setIsAuthenticated(true);
-    } catch (error) {
-      setIsAuthenticated(false);
-      setUser(null);
+      // Optionally fetch user data here
     }
-  };
+  }, []);
 
   const login = async (email: string, password: string) => {
     try {
-      await authService.login(email, password);
-      await checkAuth();
-      router.push('/dashboard');
+      const response = await api.post('/auth/login/', { email, password });
+      const { token, user } = response.data;
+      localStorage.setItem('token', token);
+      setUser(user);
+      setIsAuthenticated(true);
+      router.push('/dashboard'); // Redirect to dashboard after login
     } catch (error) {
-      throw error;
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response?.data?.message || 'Login failed');
+      }
+      throw new Error('Login failed');
     }
   };
 
-  const register = async (username: string, email: string, password: string) => {
+  const register = async (name: string, email: string, password: string) => {
     try {
-      await authService.register(username, email, password);
-      await checkAuth();
+      const response = await api.post('/auth/register/', {
+        name,
+        email,
+        password,
+      });
+      const { token, user } = response.data;
+      localStorage.setItem('token', token);
+      setUser(user);
+      setIsAuthenticated(true);
       router.push('/dashboard');
     } catch (error) {
-      throw error;
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response?.data?.message || 'Registration failed');
+      }
+      throw new Error('Registration failed');
     }
   };
 
   const logout = () => {
-    authService.logout();
-    setIsAuthenticated(false);
+    localStorage.removeItem('token');
     setUser(null);
+    setIsAuthenticated(false);
     router.push('/');
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, login, register, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

@@ -5,12 +5,31 @@ import SignInCard from './SignInCard';
 import Content from './Content';
 import { ThemeProvider } from '@/theme/exports';
 import ColorModeSelect from '../../theme/components/ColorModeSelect';
+import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
+import Button from '@mui/material/Button';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export default function SignInSide(props: { disableCustomTheme?: boolean }) {
   return (
     <ThemeProvider {...props}>
       <CssBaseline enableColorScheme />
-      <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
+      {/* <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} /> */}
+      <Box sx={{ position: 'fixed', top: '1rem', left: '1rem' }}>
+        <Link href="/" sx={{ textDecoration: 'none', color: 'inherit' }}>
+          <Button
+            startIcon={<ArrowBackIcon />}
+            sx={{ 
+              color: 'text.primary',
+              '&:hover': {
+                backgroundColor: 'action.hover',
+              }
+            }}
+          >
+            Back
+          </Button>
+        </Link>
+      </Box>
       <Stack
         direction="column"
         component="main"
