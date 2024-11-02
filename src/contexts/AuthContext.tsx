@@ -7,7 +7,7 @@ import axios from 'axios';
 interface AuthContextType {
   user: any | null;
   isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<void>;
+  login: (username_or_email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 }
@@ -27,17 +27,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (username_or_email: string, password: string) => {
     try {
-      const response = await api.post('/auth/login/', { email, password });
+      console.log('Sending login request with:', { username_or_email, password });
+      const response = await api.post('/auth/login', {
+        username_or_email: username_or_email,
+        password: password
+      });
+      
+      console.log('Login response:', response.data);
+      
       const { token, user } = response.data;
       localStorage.setItem('token', token);
       setUser(user);
       setIsAuthenticated(true);
-      router.push('/dashboard'); // Redirect to dashboard after login
+      router.push('/dashboard');
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data?.message || 'Login failed');
+        console.error('Login error details:', error.response?.data);
+        throw new Error(error.response?.data?.detail || 'Login failed');
       }
       throw new Error('Login failed');
     }
@@ -45,7 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = async (name: string, email: string, password: string) => {
     try {
-      const response = await api.post('/auth/register/', {
+      const response = await api.post('/auth/register', {
         name,
         email,
         password,

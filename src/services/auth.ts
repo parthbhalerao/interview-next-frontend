@@ -1,14 +1,20 @@
 // frontend/src/services/auth.ts
-import api from './api';
+import axios from 'axios';
+import { api } from './api';
 
 export const authService = {
-  async login(email: string, password: string) {
+  async login(username_or_email: string, password: string) {
     try {
-      const { data } = await api.post('/auth/login/', { email, password });
+      const { data } = await api.post('/auth/login/', { 
+        username_or_email: username_or_email, 
+        password: password });
       localStorage.setItem('token', data.tokens.access);
       return data;
     } catch (error) {
-      throw new Error(error.response?.data?.detail || 'Login failed');
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response?.data?.detail || 'Login failed');
+      }
+      throw new Error('Login failed');
     }
   },
 
