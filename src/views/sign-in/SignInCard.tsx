@@ -10,12 +10,13 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import Alert from '@mui/material/Alert';
 
 import { styled } from '@mui/material/styles';
 
 import ForgotPassword from './ForgotPassword';
 import { GoogleIcon, FacebookIcon, SitemarkIcon, LinkedInIcon } from '@/theme/components/icons/CustomIcons';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSignIn } from '@/hooks/useSignIn';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -36,13 +37,12 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 export default function SignInCard() {
-  const { login } = useAuth();
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+  const { error, handleSignIn } = useSignIn();
   const [open, setOpen] = React.useState(false);
-  const [loginError, setLoginError] = React.useState('');
+  const [validationErrors, setValidationErrors] = React.useState({
+    email: { error: false, message: '' },
+    password: { error: false, message: '' }
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -54,49 +54,28 @@ export default function SignInCard() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoginError('');
+    const formData = new FormData(event.currentTarget);
     
-    if (emailError || passwordError) {
-      return;
-    }
-    
-    const data = new FormData(event.currentTarget);
     try {
-      await login(
-        data.get('email') as string,
-        data.get('password') as string
-      );
+      const result = await handleSignIn({
+        email: formData.get('email') as string,
+        password: formData.get('password') as string
+      });
+      
+      if (!result) {
+        console.error('Sign in failed');
+        setValidationErrors({
+          ...validationErrors,
+          email: { error: true, message: 'Invalid credentials' }
+        });
+      }
     } catch (error) {
-      console.error('Login failed:', error);
-      setLoginError(error.message || 'Invalid credentials. Please try again.');
+      console.error('Sign in error:', error);
+      setValidationErrors({
+        email: { error: true, message: 'Invalid email or password' },
+        password: { error: true, message: 'Invalid email or password' }
+      });
     }
-  };
-
-  const validateInputs = () => {
-    const email = document.getElementById('email') as HTMLInputElement;
-    const password = document.getElementById('password') as HTMLInputElement;
-
-    let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
-    }
-
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage('');
-    }
-
-    return isValid;
   };
 
   return (
@@ -120,8 +99,8 @@ export default function SignInCard() {
         <FormControl>
           <FormLabel htmlFor="email">Email</FormLabel>
           <TextField
-            error={emailError}
-            helperText={emailErrorMessage}
+            error={validationErrors.email.error}
+            helperText={validationErrors.email.message}
             id="email"
             type="email"
             name="email"
@@ -131,7 +110,7 @@ export default function SignInCard() {
             required
             fullWidth
             variant="outlined"
-            color={emailError ? 'error' : 'primary'}
+            color={validationErrors.email.error ? 'error' : 'primary'}
             sx={{ ariaLabel: 'email' }}
           />
         </FormControl>
@@ -149,8 +128,8 @@ export default function SignInCard() {
             </Link>
           </Box>
           <TextField
-            error={passwordError}
-            helperText={passwordErrorMessage}
+            error={validationErrors.password.error}
+            helperText={validationErrors.password.message}
             name="password"
             placeholder="••••••"
             type="password"
@@ -160,7 +139,7 @@ export default function SignInCard() {
             required
             fullWidth
             variant="outlined"
-            color={passwordError ? 'error' : 'primary'}
+            color={validationErrors.password.error ? 'error' : 'primary'}
           />
         </FormControl>
         <FormControlLabel
@@ -168,7 +147,7 @@ export default function SignInCard() {
           label="Remember me"
         />
         <ForgotPassword open={open} handleClose={handleClose} />
-        <Button type="submit" fullWidth variant="contained" onClick={validateInputs}>
+        <Button type="submit" fullWidth variant="contained">
           Sign in
         </Button>
         <Typography sx={{ textAlign: 'center' }}>
@@ -184,10 +163,10 @@ export default function SignInCard() {
           </span>
         </Typography>
       </Box>
-      {loginError && (
-        <Typography color="error" sx={{ mt: 2, textAlign: 'center' }}>
-          {loginError}
-        </Typography>
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
       )}
       <Divider>or</Divider>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>

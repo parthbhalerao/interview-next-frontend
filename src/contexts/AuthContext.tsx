@@ -1,15 +1,15 @@
-// frontend/src/contexts/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { api } from '@/services/api';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import { authService } from '@/services/auth';
 
 interface AuthContextType {
   user: any | null;
   isAuthenticated: boolean;
   login: (username_or_email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -51,12 +51,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const register = async (name: string, email: string, password: string) => {
+  const register = async (username: string, email: string, password: string) => {
     try {
       const response = await api.post('/auth/register', {
-        name,
-        email,
-        password,
+        username: username,
+        email: email,
+        password: password,
       });
       const { token, user } = response.data;
       localStorage.setItem('token', token);
@@ -71,15 +71,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
-    setIsAuthenticated(false);
-    router.push('/');
+  const logout = async () => {
+    try {
+      await authService.logout();
+      setUser(null);
+      setIsAuthenticated(false);
+      router.push('/auth/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Still clear state even if API call fails
+      setUser(null);
+      setIsAuthenticated(false);
+      router.push('/auth/login');
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, isAuthenticated }}>
+    <AuthContext.Provider 
+      value={{ 
+        user, 
+        isAuthenticated, 
+        login, 
+        register, 
+        logout 
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

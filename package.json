@@ -16,7 +16,13 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
+    "@mui/x-charts": "^7.22.1",
+    "@mui/x-data-grid": "^7.22.1",
+    "@mui/x-date-pickers": "^7.22.1",
+    "@mui/x-tree-view": "^7.22.1",
     "axios": "^1.7.7",
+    "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
     "next": "^14.2.16",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

@@ -18,6 +18,8 @@ import { GoogleIcon, FacebookIcon, SitemarkIcon, LinkedInIcon } from '@/theme/co
 import ColorModeSelect from '@/theme/components/ColorModeSelect';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useSignUp } from '@/hooks/useSignUp';
+import Alert from '@mui/material/Alert';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -69,6 +71,8 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [nameError, setNameError] = React.useState(false);
   const [nameErrorMessage, setNameErrorMessage] = React.useState('');
 
+  const { error, handleSignUp, isLoading } = useSignUp();
+
   const validateInputs = () => {
     const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
@@ -106,18 +110,26 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
     return isValid;
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (nameError || emailError || passwordError) {
-      event.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!validateInputs()) {
       return;
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+    const formData = new FormData(event.currentTarget);
+    try {
+      const result = await handleSignUp({
+        name: formData.get('name') as string,
+        email: formData.get('email') as string,
+        password: formData.get('password') as string
+      });
+      
+      if (!result) {
+        console.error('Sign up failed');
+      }
+    } catch (error) {
+      console.error('Sign up error:', error);
+    }
   };
 
   return (
@@ -154,6 +166,11 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             onSubmit={handleSubmit}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
+            {error && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {error}
+              </Alert>
+            )}
             <FormControl>
               <FormLabel htmlFor="name">Full name</FormLabel>
               <TextField
