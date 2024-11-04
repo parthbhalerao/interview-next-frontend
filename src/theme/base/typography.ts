@@ -3,7 +3,7 @@ import { createTheme } from '@mui/material/styles';
 const defaultTheme = createTheme();
 
 export const typography = {
-    fontFamily: ['"Inter", "sans-serif"'].join(','),
+    fontFamily: 'var(--font-inter)',
     h1: {
       fontSize: defaultTheme.typography.pxToRem(48),
       fontWeight: 600,

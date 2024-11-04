@@ -2,19 +2,39 @@
 import axios from 'axios';
 import { api } from './api';
 
+interface LoginResponse {
+  message: string;
+  tokens: {
+    access: string;
+    refresh: string;
+  }
+}
+
+interface LoginCredentials {
+  username_or_email: string;
+  password: string;
+}
+
 export const authService = {
-  async login(username_or_email: string, password: string) {
+  async login(username_or_email: string, password: string): Promise<LoginResponse> {
     try {
-      const { data } = await api.post('/auth/login/', { 
-        username_or_email: username_or_email, 
-        password: password });
-      localStorage.setItem('token', data.tokens.access);
+      const credentials: LoginCredentials = {
+        username_or_email,
+        password
+      };
+      
+      const { data } = await api.post<LoginResponse>('/auth/login/', credentials);
+      
+      // Store both tokens
+      localStorage.setItem('accessToken', data.tokens.access);
+      localStorage.setItem('refreshToken', data.tokens.refresh);
+      
       return data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data?.detail || 'Login failed');
+        throw new Error(error.response?.data?.error || 'Login failed');
       }
-      throw new Error('Login failed');
+      throw error;
     }
   },
 
@@ -50,10 +70,19 @@ export const authService = {
 
   async logout() {
     try {
-      await api.post('/auth/logout/');
-      localStorage.removeItem('token');
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        throw new Error('No token found');
+      }
+      
+      await api.post('/auth/logout/', null);
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
     } catch (error) {
       console.error('Logout error:', error);
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      throw error;
     }
   }
 };

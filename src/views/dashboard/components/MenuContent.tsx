@@ -12,16 +12,21 @@ import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import NotesIcon from '@mui/icons-material/Notes';
 
 const mainListItems = [
-  { text: 'Home', icon: <HomeRoundedIcon /> },
-  { text: 'Analytics', icon: <AnalyticsRoundedIcon /> },
-  { text: 'Clients', icon: <PeopleRoundedIcon /> },
-  { text: 'Tasks', icon: <AssignmentRoundedIcon /> },
+  { text: 'Dashboard', icon: <HomeRoundedIcon /> },
+  { text: 'Problems', icon: <AssignmentRoundedIcon /> },
+  { text: 'Study Plans', icon: <AnalyticsRoundedIcon /> },
+  { text: 'Mock Interviews', icon: <PeopleRoundedIcon /> },
+  { text: 'Progress', icon: <TrendingUpIcon /> },
+  { text: 'Bookmarks', icon: <BookmarkIcon /> },
+  { text: 'Notes', icon: <NotesIcon /> },
 ];
 
 const secondaryListItems = [
-  { text: 'Settings', icon: <SettingsRoundedIcon /> },
   { text: 'About', icon: <InfoRoundedIcon /> },
   { text: 'Feedback', icon: <HelpRoundedIcon /> },
 ];

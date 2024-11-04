@@ -3,10 +3,12 @@ import { api } from '@/services/api';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { authService } from '@/services/auth';
+import { customerService } from '@/services/customerService';
 
 interface AuthContextType {
   user: any | null;
   isAuthenticated: boolean;
+  loading: boolean;
   login: (username_or_email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -17,37 +19,52 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsAuthenticated(true);
-      // Optionally fetch user data here
-    }
+    const initializeAuth = async () => {
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        try {
+          setLoading(true);
+          const customerData = await customerService.getCurrentCustomer();
+          setUser(customerData);
+          setIsAuthenticated(true);
+        } catch (error) {
+          console.error('Error initializing auth:', error);
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
   }, []);
 
   const login = async (username_or_email: string, password: string) => {
     try {
-      console.log('Sending login request with:', { username_or_email, password });
-      const response = await api.post('/auth/login', {
-        username_or_email: username_or_email,
-        password: password
-      });
+      setLoading(true);
+      const response = await authService.login(username_or_email, password);
       
-      console.log('Login response:', response.data);
-      
-      const { token, user } = response.data;
-      localStorage.setItem('token', token);
-      setUser(user);
+      // Set user data from the login response
+      const customerData = await customerService.getCurrentCustomer();
+      setUser(customerData);
       setIsAuthenticated(true);
+      
       router.push('/dashboard');
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Login error details:', error.response?.data);
-        throw new Error(error.response?.data?.detail || 'Login failed');
+        throw new Error(error.response?.data?.error || 'Login failed');
       }
       throw new Error('Login failed');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,15 +91,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     try {
       await authService.logout();
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       setUser(null);
       setIsAuthenticated(false);
-      router.push('/auth/login');
+      router.push('/login');
     } catch (error) {
       console.error('Logout error:', error);
       // Still clear state even if API call fails
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       setUser(null);
       setIsAuthenticated(false);
-      router.push('/auth/login');
+      router.push('/login');
     }
   };
 
@@ -91,6 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       value={{ 
         user, 
         isAuthenticated, 
+        loading, 
         login, 
         register, 
         logout 

@@ -84,7 +84,7 @@ export default function AppAppBar() {
           >
             <Link
               component={NextLink}
-              href="/auth/login"
+              href="/login"
               sx={{ 
                 textDecoration: 'none',
                 color: 'inherit'
@@ -96,7 +96,7 @@ export default function AppAppBar() {
             </Link>
             <Link
               component={NextLink}
-              href="/auth/signup"
+              href="/signup"
               sx={{ 
                 textDecoration: 'none',
                 color: 'inherit'
@@ -145,7 +145,7 @@ export default function AppAppBar() {
                 <MenuItem>
                   <Link
                     component={NextLink}
-                    href="/auth/signup"
+                    href="/signup"
                     sx={{ width: '100%', textDecoration: 'none' }}
                   >
                     <Button color="primary" variant="contained" fullWidth>
@@ -156,7 +156,7 @@ export default function AppAppBar() {
                 <MenuItem>
                   <Link
                     component={NextLink}
-                    href="/auth/login"
+                    href="/login"
                     sx={{ width: '100%', textDecoration: 'none' }}
                   >
                     <Button color="primary" variant="outlined" fullWidth>
