@@ -1,3 +1,5 @@
+// Mobile AppBar for the Dashboard
+
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -8,8 +10,8 @@ import { tabsClasses } from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
-import SideMenuMobile from '@/views/dashboard/components/SideMenuMobile';
-import MenuButton from '@/views/dashboard/components/MenuButton';
+import SideMenuMobile from '@/features/dashboard/components/SideMenuMobile';
+import MenuButton from '@/features/dashboard/components/MenuButton';
 import ColorModeIconDropdown from '@/theme/components/ColorModeIconDropdown';
 
 const Toolbar = styled(MuiToolbar)({

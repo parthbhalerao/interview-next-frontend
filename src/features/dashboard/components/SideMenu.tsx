@@ -6,8 +6,8 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import MenuContent from '@/views/dashboard/components/MenuContent';
-import OptionsMenu from '@/views/dashboard/components/OptionsMenu';
+import MenuContent from '@/features/dashboard/components/MenuContent';
+import OptionsMenu from '@/features/dashboard/components/OptionsMenu';
 import { useCustomer } from '@/hooks/useCustomer';
 import { useAuth } from '@/contexts/AuthContext';
 import Skeleton from '@mui/material/Skeleton';
@@ -75,7 +75,7 @@ export default function SideMenu() {
           alignItems: 'center'
         }}
       >
-        <SitemarkIcon sx={{ width: 32, height: 32 }} />
+        <SitemarkIcon sx={{ width: 100, height: 100 }} />
       </Box>
       <Divider />
       <MenuContent />
@@ -104,11 +104,11 @@ export default function SideMenu() {
               {customer ? `${customer.user.first_name} ${customer.user.last_name}` : 'User'}
             </Typography>
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              {currentPlan ? `${currentPlan.title} Plan` : 'No active plan'}
+              {customer?.user.email || 'No email available'}
             </Typography>
             <Divider sx={{ my: 0.5 }} />
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              {customer?.user.email || 'No email available'}
+              {currentPlan ? `${currentPlan.title} Plan` : 'No active plan'}
             </Typography>
           </Box>
           <OptionsMenu />

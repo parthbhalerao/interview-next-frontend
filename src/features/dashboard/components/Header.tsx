@@ -1,10 +1,10 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-import NavbarBreadcrumbs from '@/views/dashboard/components/NavbarBreadcrumbs';
-import MenuButton from '@/views/dashboard/components/MenuButton';
+import NavbarBreadcrumbs from '@/features/dashboard/components/NavbarBreadcrumbs';
+import MenuButton from '@/features/dashboard/components/MenuButton';
 import ColorModeIconDropdown from '@/theme/components/ColorModeIconDropdown';
-import Search from '@/views/dashboard/components/Search';
+import Search from '@/features/dashboard/components/Search';
 
 export default function Header() {
   return (

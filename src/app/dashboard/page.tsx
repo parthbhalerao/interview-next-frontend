@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import DashboardPage from '@/views/dashboard/DashboardPage';
+import DashboardPage from '@/features/dashboard/DashboardPage';
 import { unstable_noStore as noStore } from 'next/cache';
 import { useAuth } from '@/contexts/AuthContext';
 

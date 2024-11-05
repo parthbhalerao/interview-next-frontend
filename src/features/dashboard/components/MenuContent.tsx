@@ -9,28 +9,36 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import InsightsRoundedIcon from '@mui/icons-material/InsightsRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import NotesIcon from '@mui/icons-material/Notes';
-
-const mainListItems = [
-  { text: 'Dashboard', icon: <HomeRoundedIcon /> },
-  { text: 'Questions', icon: <AssignmentRoundedIcon /> },
-  { text: 'Mock Interviews', icon: <PeopleRoundedIcon /> },
-  { text: 'Notes', icon: <NotesIcon /> },
-];
-
-const secondaryListItems = [
-  { text: 'About', icon: <InfoRoundedIcon /> },
-  { text: 'Feedback', icon: <HelpRoundedIcon /> },
-];
+import { DashboardView, useDashboard } from '@/contexts/DashboardContext';
 
 export default function MenuContent() {
+  const { currentView, setCurrentView } = useDashboard();
+
+  const mainListItems = [
+    { id: 'home', text: 'Dashboard', icon: <HomeRoundedIcon /> },
+    { id: 'interviews', text: 'Mock Interviews', icon: <PeopleRoundedIcon /> },
+    { id: 'insights', text: 'Insights', icon: <InsightsRoundedIcon /> },
+    { id: 'questions', text: 'Questions', icon: <AssignmentRoundedIcon /> },
+    { id: 'notes', text: 'Notes', icon: <NotesIcon /> },
+  ];
+
+  const secondaryListItems = [
+    { text: 'About', icon: <InfoRoundedIcon /> },
+    { text: 'Feedback', icon: <HelpRoundedIcon /> },
+  ];
+
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
       <List dense>
-        {mainListItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton selected={index === 0}>
+        {mainListItems.map((item) => (
+          <ListItem key={item.id} disablePadding sx={{ display: 'block' }}>
+            <ListItemButton 
+              selected={currentView === item.id}
+              onClick={() => setCurrentView(item.id as DashboardView)}
+            >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>

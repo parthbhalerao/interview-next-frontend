@@ -3,14 +3,8 @@ import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Copyright from '@/theme/components/Copyright';
-import ChartUserByCountry from '@/views/dashboard/components/ChartUserByCountry';
-import CustomizedTreeView from '@/views/dashboard/components/CustomizedTreeView';
-import CustomizedDataGrid from '@/views/dashboard/components/CustomizedDataGrid';
-import HighlightedCard from '@/views/dashboard/components/HighlightedCard';
-import PageViewsBarChart from '@/views/dashboard/components/PageViewsBarChart';
-import SessionsChart from '@/views/dashboard/components/SessionsChart';
-import StatCard, { StatCardProps } from '@/views/dashboard/components/StatCard';
+import HighlightedCard from '@/features/dashboard/components/HighlightedCard';
+import StatCard, { StatCardProps } from '@/features/dashboard/components/StatCard';
 
 const data: StatCardProps[] = [
   {
@@ -32,8 +26,8 @@ const data: StatCardProps[] = [
     ],
   },
   {
-    title: 'Event count',
-    value: '200k',
+    title: 'Time to convince score',
+    value: '18:30',
     interval: 'Last 30 days',
     trend: 'neutral',
     data: [
@@ -64,28 +58,21 @@ export default function MainGrid() {
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <HighlightedCard />
         </Grid>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <SessionsChart />
-        </Grid>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <PageViewsBarChart />
-        </Grid>
       </Grid>
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Details
+        Recent Interviews
       </Typography>
       <Grid container spacing={2} columns={12}>
         <Grid size={{ xs: 12, lg: 9 }}>
-          <CustomizedDataGrid />
+          {/* <CustomizedDataGrid /> */}
         </Grid>
         <Grid size={{ xs: 12, lg: 3 }}>
           <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
-            <CustomizedTreeView />
-            <ChartUserByCountry />
+            {/* <CustomizedTreeView /> */}
+            {/* <ChartUserByCountry /> */}
           </Stack>
         </Grid>
       </Grid>
-      <Copyright sx={{ my: 4 }} />
     </Box>
   );
 }

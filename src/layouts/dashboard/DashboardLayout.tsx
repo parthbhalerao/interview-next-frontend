@@ -1,9 +1,11 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import AppNavbar from '../components/AppNavbar';
-import Header from '../components/Header';
-import SideMenu from '../components/SideMenu';
+import { alpha } from '@mui/material/styles';
+import AppNavbar from '@/features/dashboard/components/AppNavbar';
+import Header from '@/features/dashboard/components/Header';
+import SideMenu from '@/features/dashboard/components/SideMenu';
+import Copyright from '@/theme/components/Copyright';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -20,7 +22,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           flexGrow: 1,
           backgroundColor: theme.vars
             ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
-            : theme.palette.background.default,
+            : alpha(theme.palette.background.default, 1),
           overflow: 'auto',
         })}
       >
@@ -35,6 +37,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         >
           <Header />
           {children}
+          <Copyright sx={{ mt: 'auto', py: 3 }} />
         </Stack>
       </Box>
     </Box>
