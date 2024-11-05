@@ -29,10 +29,17 @@ const xThemeComponents = {
   ...treeViewCustomizations,
 };
 
-export default function Dashboard(props: { disableCustomTheme?: boolean }) {
+// Add this interface above the component definition
+interface DashboardPageProps {
+  contentComponent?: string;
+  disableCustomTheme?: boolean;
+}
+
+// Update the component to use the interface
+export default function DashboardPage({ contentComponent, disableCustomTheme }: DashboardPageProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <ThemeProvider {...props}>
+      <ThemeProvider>
         <CssBaseline enableColorScheme />
         <Box sx={{ display: 'flex' }}>
           <SideMenu />

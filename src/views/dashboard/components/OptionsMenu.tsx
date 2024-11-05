@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Divider, { dividerClasses } from '@mui/material/Divider';
@@ -11,6 +13,7 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import MenuButton from './MenuButton';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 const MenuItem = styled(MuiMenuItem)({
   margin: '2px 0',
@@ -20,6 +23,7 @@ export default function OptionsMenu() {
   const { logout } = useAuth();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const router = useRouter();
   
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -36,6 +40,11 @@ export default function OptionsMenu() {
     } catch (error) {
       console.error('Logout failed:', error);
     }
+  };
+
+  const handleBillingClick = () => {
+    router.push('/dashboard/billing');
+    handleClose();
   };
 
   return (
@@ -69,7 +78,7 @@ export default function OptionsMenu() {
       >
         <MenuItem onClick={handleClose}>My account</MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>Settings</MenuItem>
+        <MenuItem onClick={handleBillingClick}>Billing</MenuItem>
         <Divider />
         <MenuItem
           onClick={handleLogout}

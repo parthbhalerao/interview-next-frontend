@@ -9,56 +9,52 @@ import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
 
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 
-const tiers = [
-  {
-    title: 'Free',
-    price: '0',
-    description: [
-      '10 users included',
-      '2 GB of storage',
-      'Help center access',
-      'Email support',
-    ],
-    buttonText: 'Sign up for free',
-    buttonVariant: 'outlined',
-    buttonColor: 'primary',
-  },
-  {
-    title: 'Professional',
-    subheader: 'Recommended',
-    price: '15',
-    description: [
-      '20 users included',
-      '10 GB of storage',
-      'Help center access',
-      'Priority email support',
-      'Dedicated team',
-      'Best deals',
-    ],
-    buttonText: 'Start now',
-    buttonVariant: 'contained',
-    buttonColor: 'secondary',
-  },
-  {
-    title: 'Enterprise',
-    price: '30',
-    description: [
-      '50 users included',
-      '30 GB of storage',
-      'Help center access',
-      'Phone & email support',
-    ],
-    buttonText: 'Contact us',
-    buttonVariant: 'outlined',
-    buttonColor: 'primary',
-  },
-];
+import { useSubscription } from '@/hooks/useSubscription';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
+import { SubscriptionPlan } from '@/services/subscriptionService';
 
 export default function Pricing() {
+  const { plans, loading, error, subscribe } = useSubscription();
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  const handleSubscribe = async (planId: string) => {
+    if (!isAuthenticated) {
+      localStorage.setItem('pendingSubscription', planId);
+      router.push('/login');
+      return;
+    }
+
+    try {
+      await subscribe(planId);
+    } catch (error) {
+      console.error('Subscription error:', error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ py: 8 }}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
+  }
+
   return (
     <Container
       id="pricing"
@@ -78,19 +74,11 @@ export default function Pricing() {
           textAlign: { sm: 'left', md: 'center' },
         }}
       >
-        <Typography
-          component="h2"
-          variant="h4"
-          gutterBottom
-          sx={{ color: 'text.primary' }}
-        >
-          Pricing
+        <Typography component="h2" variant="h4" gutterBottom>
+          Choose your plan
         </Typography>
         <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-          Quickly build an effective pricing table for your potential customers with
-          this layout. <br />
-          It&apos;s built with default Material UI components with little
-          customization.
+          Select the perfect plan for your needs. Upgrade or downgrade at any time.
         </Typography>
       </Box>
       <Grid
@@ -98,110 +86,103 @@ export default function Pricing() {
         spacing={3}
         sx={{ alignItems: 'center', justifyContent: 'center', width: '100%' }}
       >
-        {tiers.map((tier) => (
+        {plans.map((plan) => (  
           <Grid
-            size={{ xs: 12, sm: tier.title === 'Enterprise' ? 12 : 6, md: 4 }}
-            key={tier.title}
+            key={plan.id}
+            size={{
+              xs: 12,
+              sm: plan.title === 'Enterprise' ? 12 : 6,
+              md: 4
+            }}
           >
             <Card
-              sx={[
-                {
-                  p: 2,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 4,
-                },
-                tier.title === 'Professional' &&
-                  ((theme) => ({
-                    border: 'none',
-                    background:
-                      'radial-gradient(circle at 50% 0%, hsl(220, 20%, 35%), hsl(220, 30%, 6%))',
-                    boxShadow: `0 8px 12px hsla(220, 20%, 42%, 0.2)`,
-                    ...theme.applyStyles('dark', {
-                      background:
-                        'radial-gradient(circle at 50% 0%, hsl(220, 20%, 20%), hsl(220, 30%, 16%))',
-                      boxShadow: `0 8px 12px hsla(0, 0%, 0%, 0.8)`,
-                    }),
-                  })),
-              ]}
+              sx={(theme) => ({
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                p: 2,
+                gap: 2,
+                backgroundColor: theme.palette.background.paper,
+                ...(plan.recommended && {
+                  borderWidth: 2,
+                  borderColor: theme.palette.primary.main,
+                  backgroundColor: theme.palette.mode === 'light' 
+                    ? theme.palette.primary[50] 
+                    : theme.palette.primary[900],
+                  boxShadow: theme.shadows[4],
+                }),
+              })}
+              variant="outlined"
             >
-              <CardContent>
-                <Box
-                  sx={[
-                    {
-                      mb: 1,
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      gap: 2,
-                    },
-                    tier.title === 'Professional'
-                      ? { color: 'grey.100' }
-                      : { color: '' },
-                  ]}
-                >
-                  <Typography component="h3" variant="h6">
-                    {tier.title}
-                  </Typography>
-                  {tier.title === 'Professional' && (
-                    <Chip icon={<AutoAwesomeIcon />} label={tier.subheader} />
-                  )}
-                </Box>
-                <Box
-                  sx={[
-                    {
-                      display: 'flex',
-                      alignItems: 'baseline',
-                    },
-                    tier.title === 'Professional'
-                      ? { color: 'grey.50' }
-                      : { color: null },
-                  ]}
-                >
-                  <Typography component="h3" variant="h2">
-                    ${tier.price}
-                  </Typography>
-                  <Typography component="h3" variant="h6">
-                    &nbsp; per month
-                  </Typography>
-                </Box>
-                <Divider sx={{ my: 2, opacity: 0.8, borderColor: 'divider' }} />
-                {tier.description.map((line) => (
-                  <Box
-                    key={line}
-                    sx={{ py: 1, display: 'flex', gap: 1.5, alignItems: 'center' }}
-                  >
-                    <CheckCircleRoundedIcon
-                      sx={[
-                        {
-                          width: 20,
-                        },
-                        tier.title === 'Professional'
-                          ? { color: 'primary.light' }
-                          : { color: 'primary.main' },
-                      ]}
+              <CardContent sx={{ flexGrow: 1 }}>
+                <Box sx={{ mb: 2 }}>
+                  {plan.recommended && (
+                    <Chip
+                      icon={<AutoAwesomeIcon />}
+                      label="Recommended"
+                      color="primary"
+                      size="small"
+                      sx={{ mb: 1 }}
                     />
-                    <Typography
-                      variant="subtitle2"
-                      component={'span'}
-                      sx={[
-                        tier.title === 'Professional'
-                          ? { color: 'grey.50' }
-                          : { color: null },
-                      ]}
-                    >
-                      {line}
+                  )}
+                  <Typography variant="h5" component="h3" gutterBottom>
+                    {plan.title}
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
+                    <Typography variant="h3" component="span">
+                      ${plan.price}
+                    </Typography>
+                    <Typography variant="subtitle1" component="span">
+                      /{plan.interval}
                     </Typography>
                   </Box>
-                ))}
+                </Box>
+                <Divider />
+                <Box sx={{ mt: 2 }}>
+                  {plan.description?.map((feature) => (
+                    <Box
+                      key={feature}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        py: 0.5,
+                      }}
+                    >
+                      <CheckCircleRoundedIcon
+                        sx={(theme) => ({
+                          fontSize: 20,
+                          color: plan.recommended
+                            ? theme.palette.primary.main
+                            : theme.palette.mode === 'light'
+                              ? theme.palette.primary[700]
+                              : theme.palette.primary[300]
+                        })}
+                      />
+                      <Typography
+                        variant="body2"
+                        sx={(theme) => ({
+                          color: plan.recommended
+                            ? theme.palette.mode === 'light'
+                              ? theme.palette.primary[900]
+                              : theme.palette.primary[100]
+                            : theme.palette.text.secondary
+                        })}
+                      >
+                        {feature}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
               </CardContent>
               <CardActions>
                 <Button
                   fullWidth
-                  variant={tier.buttonVariant as 'outlined' | 'contained'}
-                  color={tier.buttonColor as 'primary' | 'secondary'}
+                  variant={plan.buttonVariant}
+                  color={plan.buttonColor}
+                  onClick={() => handleSubscribe(plan.id)}
                 >
-                  {tier.buttonText}
+                  {plan.buttonText}
                 </Button>
               </CardActions>
             </Card>

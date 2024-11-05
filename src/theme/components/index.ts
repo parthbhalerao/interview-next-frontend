@@ -1,5 +1,5 @@
-export { dataDisplayCustomizations } from './dataDisplay';
-export { feedbackCustomizations } from './feedback';
-export { inputsCustomizations } from './inputs';
-export { navigationCustomizations } from './navigation';
-export { surfacesCustomizations } from './surfaces';
+export { dataDisplayCustomizations } from '@/theme/components/dataDisplay';
+export { feedbackCustomizations } from '@/theme/components/feedback';
+export { inputsCustomizations } from '@/theme/components/inputs';
+export { navigationCustomizations } from '@/theme/components/navigation';
+export { surfacesCustomizations } from '@/theme/components/surfaces';

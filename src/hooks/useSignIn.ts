@@ -20,7 +20,6 @@ export const useSignIn = () => {
       try {
         await login(formData.email, formData.password);
         console.log('Sign in successful');
-        router.push('/dashboard'); // Redirect after successful login
         return true;
       } catch (err) {
         console.error('Sign in error:', err);

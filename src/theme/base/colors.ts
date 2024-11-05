@@ -1,5 +1,3 @@
-import { createTheme } from '@mui/material/styles';
-
 declare module '@mui/material/styles/createPalette' {
     interface ColorRange {
       50: string;

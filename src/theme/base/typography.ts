@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles';
 
 const defaultTheme = createTheme();
 
-export const typography = {
+export const Typography = {
     fontFamily: 'var(--font-inter)',
     h1: {
       fontSize: defaultTheme.typography.pxToRem(48),

@@ -1,5 +1,5 @@
 import { alpha } from '@mui/material/styles';
-import { brand, gray, green, orange, red } from './colors';
+import { brand, gray, green, orange, red } from '@/theme/base/colors';
 
 export const colorSchemes = {
     light: {

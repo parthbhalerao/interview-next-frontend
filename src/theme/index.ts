@@ -1,20 +1,20 @@
 'use client';
 import { createTheme } from '@mui/material/styles';
-import { brand, gray, green, orange, red } from './base/colors';
-import { typography } from './base/typography';
-import { shadows } from './base/shadows';
-import { shape } from './base/shape';
-import { colorSchemes } from './base/schemes';
+import { brand, gray, green, orange, red } from '@/theme/base/colors';
+import { Typography } from '@/theme/base/typography';
+import { shadows } from '@/theme/base/shadows';
+import { shape } from '@/theme/base/shape';
+import { colorSchemes } from '@/theme/base/schemes';
 import {
   inputsCustomizations,
   dataDisplayCustomizations,
   feedbackCustomizations,
   navigationCustomizations,
   surfacesCustomizations,
-} from './components';
+} from '@/theme/components';
 
 const theme = createTheme({
-  typography,
+  typography: Typography,
   shape,
   shadows,
   palette: {

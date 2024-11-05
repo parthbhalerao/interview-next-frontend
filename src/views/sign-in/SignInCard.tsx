@@ -15,8 +15,11 @@ import Alert from '@mui/material/Alert';
 import { styled } from '@mui/material/styles';
 
 import ForgotPassword from './ForgotPassword';
-import { GoogleIcon, FacebookIcon, SitemarkIcon, LinkedInIcon } from '@/theme/components/icons/CustomIcons';
+import { SitemarkIcon } from '@/theme/components/icons/SitemarkIcon';
+import { GoogleIcon, LinkedInIcon } from '@/theme/components/icons/CustomBrandIcons';
 import { useSignIn } from '@/hooks/useSignIn';
+import { useRouter } from 'next/navigation';
+import { useSubscription } from '@/hooks/useSubscription';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -37,6 +40,8 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 export default function SignInCard() {
+  const router = useRouter();
+  const { subscribe } = useSubscription();
   const { error, handleSignIn } = useSignIn();
   const [open, setOpen] = React.useState(false);
   const [validationErrors, setValidationErrors] = React.useState({
@@ -55,6 +60,7 @@ export default function SignInCard() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+    const pendingSubscription = localStorage.getItem('pendingSubscription');
     
     try {
       const result = await handleSignIn({
@@ -62,7 +68,20 @@ export default function SignInCard() {
         password: formData.get('password') as string
       });
       
-      if (!result) {
+      if (result) {
+        if (pendingSubscription) {
+          try {
+            await subscribe(pendingSubscription);
+            return;
+          } catch (error) {
+            console.error('Subscription error:', error);
+            localStorage.removeItem('pendingSubscription');
+            router.push('/dashboard');
+          }
+        } else {
+          router.push('/dashboard');
+        }
+      } else {
         console.error('Sign in failed');
         setValidationErrors({
           ...validationErrors,

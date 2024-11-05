@@ -1,6 +1,6 @@
 // frontend/src/services/auth.ts
 import axios from 'axios';
-import { api } from './api';
+import { api } from '@/services/api';
 
 interface LoginResponse {
   message: string;

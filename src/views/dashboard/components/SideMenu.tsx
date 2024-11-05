@@ -6,13 +6,13 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import MenuContent from './MenuContent';
-import CardAlert from './CardAlert';
-import OptionsMenu from './OptionsMenu';
+import MenuContent from '@/views/dashboard/components/MenuContent';
+import OptionsMenu from '@/views/dashboard/components/OptionsMenu';
 import { useCustomer } from '@/hooks/useCustomer';
 import { useAuth } from '@/contexts/AuthContext';
 import Skeleton from '@mui/material/Skeleton';
-import { SitemarkIcon } from '@/theme/components/icons/CustomIcons';
+import { SitemarkIcon } from '@/theme/components/icons/SitemarkIcon';
+import { useSubscription } from '@/hooks/useSubscription';
 
 const drawerWidth = 240;
 
@@ -40,8 +40,9 @@ const LoadingState = () => (
 export default function SideMenu() {
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { customer, loading: customerLoading, error, fetchCurrentCustomer } = useCustomer();
+  const { currentPlan, loading: subscriptionLoading } = useSubscription();
 
-  const isLoading = authLoading || customerLoading;
+  const isLoading = authLoading || customerLoading || subscriptionLoading;
 
   React.useEffect(() => {
     if (isAuthenticated && !authLoading && !customer) {
@@ -102,6 +103,10 @@ export default function SideMenu() {
             <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
               {customer ? `${customer.user.first_name} ${customer.user.last_name}` : 'User'}
             </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {currentPlan ? `${currentPlan.title} Plan` : 'No active plan'}
+            </Typography>
+            <Divider sx={{ my: 0.5 }} />
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
               {customer?.user.email || 'No email available'}
             </Typography>

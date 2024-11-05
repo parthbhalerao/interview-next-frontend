@@ -1,7 +1,7 @@
 import { Theme } from '@mui/material/styles';
 import { axisClasses, legendClasses, chartsGridClasses } from '@mui/x-charts';
 import type { ChartsComponents } from '@mui/x-charts/themeAugmentation';
-import { gray } from '../base/colors';
+import { gray } from '@/theme/base/colors';
 
 export const chartsCustomizations: ChartsComponents<Theme> = {
   MuiChartsAxis: {

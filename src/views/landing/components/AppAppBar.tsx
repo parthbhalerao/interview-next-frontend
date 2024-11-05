@@ -12,7 +12,7 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Link from '@mui/material/Link';
-import { SitemarkIcon } from '@/theme/components/icons/CustomIcons';
+import { SitemarkIcon } from '@/theme/components/icons/SitemarkIcon';
 import ColorModeIconDropdown from '@/theme/components/ColorModeIconDropdown';
 import NextLink from 'next/link';
 
