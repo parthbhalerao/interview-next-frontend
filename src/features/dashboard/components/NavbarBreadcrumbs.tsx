@@ -1,30 +1,32 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import Breadcrumbs, { breadcrumbsClasses } from '@mui/material/Breadcrumbs';
-import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
-
-const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
-  margin: theme.spacing(1, 0),
-  [`& .${breadcrumbsClasses.separator}`]: {
-    color: (theme.vars || theme).palette.action.disabled,
-    margin: 1,
-  },
-  [`& .${breadcrumbsClasses.ol}`]: {
-    alignItems: 'center',
-  },
-}));
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import { useDashboard } from '@/contexts/DashboardContext';
 
 export default function NavbarBreadcrumbs() {
+  const { currentView } = useDashboard();
+
+  const getViewTitle = (view: string) => {
+    switch (view) {
+      case 'home':
+        return 'Home';
+      case 'interviews':
+        return 'Mock Interviews';
+      case 'insights':
+        return 'Insights';
+      case 'questions':
+        return 'Questions';
+      case 'notes':
+        return 'Notes';
+      default:
+        return 'Home';
+    }
+  };
+
   return (
-    <StyledBreadcrumbs
-      aria-label="breadcrumb"
-      separator={<NavigateNextRoundedIcon fontSize="small" />}
-    >
-      <Typography variant="body1">Dashboard</Typography>
-      <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
-        Home
-      </Typography>
-    </StyledBreadcrumbs>
+    <Breadcrumbs aria-label="breadcrumb">
+      <Typography color="text.secondary">Dashboard</Typography>
+      <Typography color="text.primary">{getViewTitle(currentView)}</Typography>
+    </Breadcrumbs>
   );
 }
