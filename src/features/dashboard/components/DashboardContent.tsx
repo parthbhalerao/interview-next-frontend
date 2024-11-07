@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useDashboard } from '@/contexts/DashboardContext';
 import MainGrid from '@/features/dashboard/components/MainGrid';
+import InterviewsView from '@/features/dashboard/components/InterviewsView';
 
-const InterviewsView = () => <div>Interviews View</div>; // Replace with actual component
 const InsightsView = () => <div>Insights View</div>; // Replace with actual component
 const QuestionsView = () => <div>Questions View</div>; // Replace with actual component
 const NotesView = () => <div>Notes View</div>; // Replace with actual component

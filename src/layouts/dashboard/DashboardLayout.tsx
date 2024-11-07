@@ -36,6 +36,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           }}
         >
           <Header />
+          <Box sx={{ width: '100%', pt: 3 }}></Box>
           {children}
           <Copyright sx={{ mt: 'auto', py: 3 }} />
         </Stack>

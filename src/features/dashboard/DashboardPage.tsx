@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@/theme/exports';
 import DashboardLayout from '@/layouts/dashboard/DashboardLayout';
 import { DashboardProvider } from '@/contexts/DashboardContext';
-import DashboardContent from './components/DashboardContent';
+import DashboardContent from '@/features/dashboard/components/DashboardContent';
 
 interface DashboardPageProps {
   contentComponent?: string;
